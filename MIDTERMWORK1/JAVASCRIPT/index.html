@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Sales Summary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Executive Sales Summary Dashboard</h1>
+            <p>Data imported from local system</p>
+        </header>
+
+        <div class="metrics-grid" id="metrics">
+            <p>Loading analytics...</p>
+        </div>
+    </div>
+
+    <script>
+        // Fetch the calculated data from our Node.js backend
+        fetch('/api/data')
+            .then(response => response.json())
+            .then(data => {
+                const metricsDiv = document.getElementById('metrics');
+                if (data.success) {
+                    metricsDiv.innerHTML = `
+                        <div class="card">
+                            <h3>Total Records</h3>
+                            <div class="value">${data.totalRecords}</div>
+                        </div>
+                        <div class="card">
+                            <h3>Total Sales / Revenue</h3>
+                            <div class="value">$${data.totalSales}M</div>
+                        </div>
+                        <div class="card">
+                            <h3>Average Sales / Trans.</h3>
+                            <div class="value">$${data.averageSales}M</div>
+                        </div>
+                        <div class="card">
+                            <h3>Highest Single Trans.</h3>
+                            <div class="value">$${data.highestTransaction}M</div>
+                        </div>
+                        <div class="card">
+                            <h3>Lowest Single Trans.</h3>
+                            <div class="value">$${data.lowestTransaction}M</div>
+                        </div>
+                    `;
+                } else {
+                    metricsDiv.innerHTML = `<p class="error">Error: ${data.message}</p>`;
+                }
+            })
+            .catch(err => console.error('Error fetching data:', err));
+    </script>
+</body>
+</html>
